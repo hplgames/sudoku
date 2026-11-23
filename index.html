@@ -61,6 +61,7 @@
     font-weight: 700; font-size: 15px; color: var(--ink); box-shadow: 0 2px 0 var(--shadow);
     display: grid; place-items: center; padding: 0 8px; flex: none;
   }
+  a.icon { text-decoration: none; }
   .icon[aria-pressed="true"] { background: var(--ink); color: #fff; box-shadow: 0 2px 0 #0f1734; }
   .icon.help { background: var(--hint); color: #fff; box-shadow: 0 2px 0 var(--hint-dark); font-size: 19px; }
   @media (max-width: 400px) {
@@ -248,6 +249,7 @@
 <div class="app">
   <header class="top">
     <div class="logo"><i aria-hidden="true"><b></b><b></b><b></b><b></b></i><span>Sudoku</span></div>
+    <a class="icon" id="homeLink" href="/" hidden>🏠</a>
     <button class="icon" id="kidsBtn" aria-pressed="false" hidden>🍎</button>
     <button class="icon" id="errBtn" aria-pressed="true">✓</button>
     <button class="icon" id="soundBtn">🔊</button>
@@ -323,7 +325,7 @@
 <script>
 (() => {
   'use strict';
-  const APP_VERSION = "1.0";
+  const APP_VERSION = "1.1";
 
   /* LOGIC START */
   // Box shape per size: [rows per box, cols per box]
@@ -530,7 +532,7 @@
       left: 'còn {k}', board: 'Bàn sudoku {n}×{n}', cell: 'Hàng {r}, cột {c}', empty: 'trống',
       pickCell: 'Chạm vào một ô trống trước nhé', givenCell: 'Ô này là số của đề, không đổi được',
       errOn: 'Báo lỗi ngay: bật', errOff: 'Báo lỗi ngay: tắt', kidsOn: 'Dùng hình thay số', kidsOff: 'Dùng số',
-      soundOn: 'Tắt âm thanh', soundOff: 'Bật âm thanh', help: 'Cách chơi', lang: 'Đổi ngôn ngữ',
+      soundOn: 'Tắt âm thanh', soundOff: 'Bật âm thanh', help: 'Cách chơi', lang: 'Đổi ngôn ngữ', home: 'Về trang trò chơi',
       hNaked: 'Ô viền cam chỉ có thể là {d}.', hRow: 'Hàng đã có {l}.', hCol: 'Cột có thêm {l}.', hBox: 'Khối có thêm {l}.', hOnly: 'Chỉ còn lại số {d}.',
       hHidden_box: 'Trong khối tô cam, số {d} chỉ đặt được vào ô viền cam. Các ô trống khác (dấu ×) bị chặn vì hàng hoặc cột của chúng đã có {d}.',
       hHidden_row: 'Trong hàng tô cam, số {d} chỉ đặt được vào ô viền cam. Các ô trống khác (dấu ×) bị chặn vì cột hoặc khối của chúng đã có {d}.',
@@ -553,7 +555,7 @@
       left: '{k} left', board: '{n}×{n} sudoku board', cell: 'Row {r}, column {c}', empty: 'empty',
       pickCell: 'Tap an empty cell first', givenCell: 'This number is part of the puzzle',
       errOn: 'Show mistakes: on', errOff: 'Show mistakes: off', kidsOn: 'Use pictures', kidsOff: 'Use numbers',
-      soundOn: 'Mute', soundOff: 'Unmute', help: 'How to play', lang: 'Change language',
+      soundOn: 'Mute', soundOff: 'Unmute', help: 'How to play', lang: 'Change language', home: 'Back to all games',
       hNaked: 'The orange cell can only be {d}.', hRow: 'Its row has {l}.', hCol: 'Its column adds {l}.', hBox: 'Its box adds {l}.', hOnly: 'Only {d} is left.',
       hHidden_box: 'In the orange box, {d} fits only in the outlined cell. The other empty cells (×) are blocked because their row or column already has {d}.',
       hHidden_row: 'In the orange row, {d} fits only in the outlined cell. The other empty cells (×) are blocked because their column or box already has {d}.',
@@ -576,7 +578,7 @@
       left: '剩{k}', board: '{n}×{n} 数独', cell: '第{r}行，第{c}列', empty: '空',
       pickCell: '请先点一个空格', givenCell: '这是题目给的数字，不能改',
       errOn: '即时纠错：开', errOff: '即时纠错：关', kidsOn: '用图案代替数字', kidsOff: '用数字',
-      soundOn: '静音', soundOff: '打开声音', help: '玩法', lang: '切换语言',
+      soundOn: '静音', soundOff: '打开声音', help: '玩法', lang: '切换语言', home: '返回游戏列表',
       hNaked: '橙框格子只能是 {d}。', hRow: '这一行已有 {l}。', hCol: '这一列还有 {l}。', hBox: '这一宫还有 {l}。', hOnly: '只剩下 {d}。',
       hHidden_box: '在橙色宫里，{d} 只能放进橙框格子。其他空格（×）所在的行或列已经有 {d}。',
       hHidden_row: '在橙色行里，{d} 只能放进橙框格子。其他空格（×）所在的列或宫已经有 {d}。',
@@ -1001,6 +1003,7 @@
     document.querySelectorAll('#levelSeg button').forEach((b) => { b.textContent = t('l' + b.dataset.l); });
     const lb = $('#langBtn'); lb.textContent = LANG_LABEL[S.lang]; lb.title = t('lang'); lb.setAttribute('aria-label', t('lang'));
     const hb = $('#helpBtn'); hb.title = t('help'); hb.setAttribute('aria-label', t('help'));
+    const hl = $('#homeLink'); hl.title = t('home'); hl.setAttribute('aria-label', t('home'));
     $('#foot').textContent = 'Father_AI · v' + APP_VERSION;
     renderAll(); renderHintText();
     if (!$('#tut').hidden) renderTut();
@@ -1187,6 +1190,8 @@
   }
 
   function start() {
+    // Home link to the family games menu: only on the GitHub site (and local preview), not inside the Artifact.
+    if (/github\.io$|^localhost$|^127\.0\.0\.1$/.test(location.hostname)) $('#homeLink').hidden = false;
     const restored = load();
     setSize(S.n);
     wire();
