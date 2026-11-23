@@ -10,6 +10,8 @@ Sudoku cho cả nhà, chơi ngay trên trình duyệt máy tính hoặc điện 
 - Pháo hoa và nhạc mừng khi giải xong
 - Tiếng Việt / English / 中文
 
+Chơi tại https://hplgames.github.io/sudoku/. Các trò chơi khác của cả nhà: https://hplgames.github.io/
+
 Toàn bộ game nằm trong một file `index.html`, không cần cài đặt.
 
 Father_AI
